@@ -50,7 +50,8 @@ void summation(){
    for (int k = 0; k < num; ++k) {
         pthread_join(THREAD_ARRAY[k], NULL);
     }
-
+    if(CARRY_ARRAY[num]==1)
+        num+=1;
     for (int j = 0; j <num; j++)
     {
         RESULT_ARRAY[j]+=CARRY_ARRAY[j];// after thread summation if there is carry it sum with result array again
@@ -62,17 +63,13 @@ void summation(){
 
 
 
-void isNumeric(const char *num) { // it is checked is number numeric or not
+void isNumeric(const char *num,int new_socket) { // it is checked is number numeric or not
     char *end;
     long value = strtol(num, &end, 10);
     if (end == num) {
-        printf("input is not a number: %s", num);
+        write(new_socket,"input is not a number", sizeof("input is not a number"));
+        exit(EXIT_FAILURE); 
     } 
-      
-    else if (*end != '\0') {
-            printf("extra characters after the number: %s", end);
-        
-    }
 
 
 }
@@ -94,9 +91,9 @@ void string_to_integer(char array_1[],int array_2[],int new_socket){
    while( token != NULL ) {
 
     
-    isNumeric(token);
+    isNumeric(token,new_socket);
     
-    if(atoi(token)<=999 &&atoi(token) >= 0 && strlen(token)>=100){//checking of whether number is smaller than 999 or not 
+    if(atoi(token)<=999 &&atoi(token) >= 0 && strlen(token)<100){//checking of whether number is smaller than 999 or not 
     array_2[l]=atoi(token); //printing each token
     l++;
     token = strtok(NULL, " ");
@@ -120,6 +117,8 @@ void writing_to_Console(int new_socket){// writing to result of summation to tel
     snprintf(str, length + 1, "%d", x);
     
     write(new_socket, str, length + 1);
+    write(new_socket, " ", sizeof(" "));
+
     
     free(str);
     }   
@@ -199,10 +198,13 @@ int main(int argc, char *argv[])
     puts("Connection accepted");
      
     // Reply to the client
-  
-    
-    handle_connection(new_socket);
+    while (1==1)
+    {
+        handle_connection(new_socket);
 
+    }
+    
+   
 
     
     close(sockfd);
