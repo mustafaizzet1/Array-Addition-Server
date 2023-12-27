@@ -50,7 +50,7 @@ void summation(){
    for (int k = 0; k < num; ++k) {
         pthread_join(THREAD_ARRAY[k], NULL);
     }
-    if(CARRY_ARRAY[num]==1)
+    if(CARRY_ARRAY[num]==1)// checking whether the  last value  of result array have carry or dont have
         num+=1;
     for (int j = 0; j <num; j++)
     {
@@ -198,11 +198,10 @@ int main(int argc, char *argv[])
     puts("Connection accepted");
      
     // Reply to the client
-    while (1==1)
-    {
-        handle_connection(new_socket);
+  
+    handle_connection(new_socket);
 
-    }
+  
     
    
 
